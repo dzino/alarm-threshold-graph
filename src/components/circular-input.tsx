@@ -11,7 +11,7 @@ const passiveColor = "#3b649630"
 interface MyProps {
   activeColort: string
   value: number
-  setValue: React.Dispatch<React.SetStateAction<number>>
+  setValue: (v: number) => void
   maxCircular: number
 }
 
