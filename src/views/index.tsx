@@ -1,22 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
-import { connect, ConnectedProps } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import * as Actions from "../redux/actions"
 import dateFormat from "dateformat"
 import * as Dec from "../declaration"
 import GraphX from "../components/graph"
 import { SVG } from "../components/svg"
 import Circular from "../components/circular-input"
-
-const mapState = (state: Dec.Redux.RootState) => ({
-  limitTemperature: state.limitTemperature.value,
-})
-const mapDispatch = {
-  setLimitTemperature(v: number): Dec.Actions.SetLimitTemperature {
-    return { type: "SetLimitTemperature", payload: v }
-  },
-}
-const connector = connect(mapState, mapDispatch)
-type PropsFromRedux = ConnectedProps<typeof connector>
-// type MyProps = PropsFromRedux & {}
 
 const styles: { [key: string]: React.CSSProperties } = {
   app: {
@@ -97,7 +86,15 @@ class Graph {
   }
 }
 
-function App({ limitTemperature, setLimitTemperature }: PropsFromRedux) {
+export default function App() {
+  /* Redux */
+  const dispatch = useDispatch()
+  const limitTemperature = useSelector(
+    (state: Dec.Redux.RootState) => state.limitTemperature.value
+  )
+  const setLimitTemperature = (v: number) =>
+    dispatch(Actions.setLimitTemperature(v))
+
   /** ## Threshold retention timer */
   const timer = useRef<NodeJS.Timeout | null>(null)
   const [temperature, setTemperature] = useState<number>(0)
@@ -217,5 +214,3 @@ function App({ limitTemperature, setLimitTemperature }: PropsFromRedux) {
     </div>
   )
 }
-
-export default connector(App)
