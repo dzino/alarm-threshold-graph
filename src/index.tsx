@@ -10,14 +10,6 @@ import "./index.css"
 import App from "./views"
 
 /**
- * # Version TypeScript
- *
- * To get rid of ESlint underscores - use *TypeScript React* *4.3.2*
- * In *VScode* toggle in the bottom bar
- * PS: This version is not currently available in this editor.
- */
-
-/**
  * # Redux
  * Chrome: Redux DevTools
  */
