@@ -6,5 +6,5 @@ const initialState: Dec.Redux.RootState["data"] = {
 
 export const dataReducer = (
   state = initialState,
-  action: Dec.Actions.SetData
+  action: Dec.Actions.Data
 ): Dec.Redux.RootState["data"] => state

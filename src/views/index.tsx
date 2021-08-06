@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import * as Actions from "../redux/actions"
 import dateFormat from "dateformat"
 import * as Dec from "../declaration"
 import GraphX from "../components/graph"
@@ -88,12 +87,16 @@ class Graph {
 
 export default function App() {
   /* Redux */
-  const dispatch = useDispatch()
+  const dispatch: (v: Dec.Actions.All) => void = useDispatch()
+
   const limitTemperature = useSelector(
     (state: Dec.Redux.RootState) => state.limitTemperature.value
   )
   const setLimitTemperature = (v: number) =>
-    dispatch(Actions.setLimitTemperature(v))
+    dispatch({
+      type: "LIMIT_TEMPERATURE",
+      payload: v,
+    })
 
   /** ## Threshold retention timer */
   const timer = useRef<NodeJS.Timeout | null>(null)

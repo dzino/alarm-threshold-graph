@@ -6,8 +6,8 @@ const initialState: Dec.Redux.RootState["limitTemperature"] = {
 
 export const limitTemperatureReducer = (
   state = initialState,
-  action: Dec.Actions.SetLimitTemperature
+  action: Dec.Actions.LimitTemperature
 ): Dec.Redux.RootState["limitTemperature"] =>
-  action.type === "SetLimitTemperature"
+  action.type === "LIMIT_TEMPERATURE"
     ? { ...state, value: action.payload }
     : state

@@ -17,12 +17,14 @@ export declare namespace Redux {
 }
 
 export declare namespace Actions {
-  interface SetLimitTemperature {
-    type: "SetLimitTemperature"
+  interface LimitTemperature {
+    type: "LIMIT_TEMPERATURE"
     payload: Redux.RootState["limitTemperature"]["value"]
   }
-  interface SetData {
-    type: "SetData"
+  interface Data {
+    type: "DATA"
     payload: Redux.RootState["data"]["value"]
   }
+
+  type All = LimitTemperature | Data
 }
