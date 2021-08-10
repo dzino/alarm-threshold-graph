@@ -3,6 +3,6 @@ import { limitTemperatureReducer } from "./limitTemperatureReducer"
 import { dataReducer } from "./dataReducer"
 
 export const rootReducer = combineReducers({
-  limitTemperature: limitTemperatureReducer,
+  limitTemp: limitTemperatureReducer,
   data: dataReducer,
 })

@@ -88,24 +88,22 @@ class Graph {
 export default function App() {
   /* Redux */
   const dispatch: (v: Dec.Actions.All) => void = useDispatch()
-
-  const limitTemperature = useSelector(
-    (state: Dec.Redux.RootState) => state.limitTemperature.value
-  )
-  const setLimitTemperature = (v: Dec.General.TemperatureUnit) =>
-    dispatch({ type: "LIMIT_TEMPERATURE", payload: v })
-
-  const data = useSelector((state: Dec.Redux.RootState) => state.data.value)
-  const setData = (v: Dec.General.DataUnit) =>
-    dispatch({ type: "DATA", payload: v })
+  const [limitTemp, setLimitTemp] = [
+    useSelector((state: Dec.Redux.RootState) => state.limitTemp.value),
+    (v: Dec.General.TempUnit) => dispatch({ type: "LIMIT_TEMP", payload: v }),
+  ]
+  const [data, setData] = [
+    useSelector((state: Dec.Redux.RootState) => state.data.value),
+    (v: Dec.General.DataUnit) => dispatch({ type: "DATA", payload: v }),
+  ]
 
   /** ## Threshold retention timer */
   const timer = useRef<NodeJS.Timeout | null>(null)
   const [temperature, setTemperature] = useState<number>(0)
-  const alarm: boolean = temperature < limitTemperature
+  const alarm: boolean = temperature < limitTemp
 
   /* Reset saved limit */
-  // localStorage.setItem("limitTemperature", JSON.stringify(0));
+  // localStorage.setItem("limitTemp", JSON.stringify(0));
 
   const host: Readonly<string> = "192.168.43.100"
   const port: Readonly<number> = 8080
@@ -145,11 +143,11 @@ export default function App() {
   }
 
   function limitsGet(): void {
-    setLimitTemperature(+(localStorage.getItem("limitTemperature") || 0))
+    setLimitTemp(+(localStorage.getItem("limitTemp") || 0))
   }
 
   function limitsSet(): void {
-    localStorage.setItem("limitTemperature", JSON.stringify(limitTemperature))
+    localStorage.setItem("limitTemp", JSON.stringify(limitTemp))
   }
 
   useEffect(() => {
@@ -162,7 +160,7 @@ export default function App() {
     timer.current = setTimeout(() => {
       limitsSet()
     }, 3000)
-  }, [limitTemperature]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [limitTemp]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const lastUnit = data[data.length - 1]
@@ -182,7 +180,7 @@ export default function App() {
           <div>
             <GraphX
               data={graphTemp.render}
-              threshold={limitTemperature}
+              threshold={limitTemp}
               thresholdInversion={true}
               xHead={[10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]}
               xMeasure={"min"}
@@ -194,10 +192,8 @@ export default function App() {
               style={{ ...styles.graphHeader, marginTop: -25 }}
             >
               {
-                SVG(
-                  40,
-                  temperature < limitTemperature ? "#f73914  " : "#71cdf1"
-                ).temperature
+                SVG(40, temperature < limitTemp ? "#f73914  " : "#71cdf1")
+                  .temperature
               }
               <h2 style={{ ...styles.h2, marginLeft: 6, marginTop: 5 }}>
                 {temperature}
@@ -206,8 +202,8 @@ export default function App() {
             <div style={{ ...styles.centeredContent, marginTop: -20 }}>
               <Circular
                 activeColort={alarm ? "#f73914" : "#71cdf1"}
-                value={limitTemperature}
-                setValue={setLimitTemperature}
+                value={limitTemp}
+                setValue={setLimitTemp}
                 maxCircular={50}
               />
             </div>

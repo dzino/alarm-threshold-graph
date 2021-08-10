@@ -3,7 +3,7 @@ export declare namespace General {
     temperature: number
     date: number
   }
-  type TemperatureUnit = number
+  type TempUnit = number
 }
 
 export declare namespace Redux {
@@ -11,8 +11,8 @@ export declare namespace Redux {
     data: {
       value: General.DataUnit[]
     }
-    limitTemperature: {
-      value: General.TemperatureUnit
+    limitTemp: {
+      value: General.TempUnit
     }
   }
 }
@@ -23,8 +23,8 @@ export declare namespace Actions {
     payload: General.DataUnit
   }
   interface LimitTemperature {
-    type: "LIMIT_TEMPERATURE"
-    payload: General.TemperatureUnit
+    type: "LIMIT_TEMP"
+    payload: General.TempUnit
   }
 
   type All = LimitTemperature | Data
