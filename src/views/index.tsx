@@ -92,16 +92,16 @@ export default function App() {
   const limitTemperature = useSelector(
     (state: Dec.Redux.RootState) => state.limitTemperature.value
   )
-  const setLimitTemperature = (v: number) =>
-    dispatch({
-      type: "LIMIT_TEMPERATURE",
-      payload: v,
-    })
+  const setLimitTemperature = (v: Dec.General.TemperatureUnit) =>
+    dispatch({ type: "LIMIT_TEMPERATURE", payload: v })
+
+  const data = useSelector((state: Dec.Redux.RootState) => state.data.value)
+  const setData = (v: Dec.General.DataUnit) =>
+    dispatch({ type: "DATA", payload: v })
 
   /** ## Threshold retention timer */
   const timer = useRef<NodeJS.Timeout | null>(null)
   const [temperature, setTemperature] = useState<number>(0)
-  const [data, setData] = useState<Dec.General.DataUnit[]>([])
   const alarm: boolean = temperature < limitTemperature
 
   /* Reset saved limit */
@@ -125,7 +125,7 @@ export default function App() {
         ),
         date: tools.dateID(),
       }
-      setData((v) => [...v, convert])
+      setData(convert)
     } else {
       /* Server request */
       const requestOptions = {
@@ -139,7 +139,7 @@ export default function App() {
             ...lastUnit,
             date: tools.dateID(),
           }
-          setData((v) => [...v, convert])
+          setData(convert)
         })
     }
   }
