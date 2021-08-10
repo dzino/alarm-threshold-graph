@@ -102,17 +102,20 @@ export default function App() {
   const [temperature, setTemperature] = useState<number>(0)
   const alarm: boolean = temperature < limitTemp
 
-  /* Reset saved limit */
-  // localStorage.setItem("limitTemp", JSON.stringify(0));
-
-  const host: Readonly<string> = "192.168.43.100"
-  const port: Readonly<number> = 8080
+  const [host, port]: Readonly<[string, number]> = ["192.168.43.100", 8080]
   const graphLength: Readonly<number> = 120
 
   const graphTemp = new Graph(
     graphLength,
     data.map((i) => i.temperature)
   )
+
+  /* Reset saved limit */
+  // localStorage.setItem("limitTemp", JSON.stringify(0));
+  const [limitsGet, limitsSet] = [
+    (): void => setLimitTemp(+(localStorage.getItem("limitTemp") || 0)),
+    (): void => localStorage.setItem("limitTemp", JSON.stringify(limitTemp)),
+  ]
 
   function update(): void {
     if (__DEV__) {
@@ -139,14 +142,6 @@ export default function App() {
     }
   }
 
-  function limitsGet(): void {
-    setLimitTemp(+(localStorage.getItem("limitTemp") || 0))
-  }
-
-  function limitsSet(): void {
-    localStorage.setItem("limitTemp", JSON.stringify(limitTemp))
-  }
-
   useEffect(() => {
     limitsGet()
     update()
@@ -154,9 +149,7 @@ export default function App() {
 
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(() => {
-      limitsSet()
-    }, 3000)
+    timer.current = setTimeout(limitsSet, 3000)
   }, [limitTemp]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
