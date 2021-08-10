@@ -48,7 +48,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 }
 
-const tools = {
+const { dateID, getRandomInt, __DEV__ } = {
   dateID(): number {
     return +dateFormat(new Date(), "yyyymmddHHMMssl")
   },
@@ -115,13 +115,10 @@ export default function App() {
   )
 
   function update(): void {
-    if (tools.__DEV__) {
+    if (__DEV__) {
       const convert: Dec.General.DataUnit = {
-        temperature: tools.getRandomInt(
-          50,
-          data[data.length - 1]?.temperature || 20
-        ),
-        date: tools.dateID(),
+        temperature: getRandomInt(50, data[data.length - 1]?.temperature || 20),
+        date: dateID(),
       }
       setData(convert)
     } else {
@@ -135,7 +132,7 @@ export default function App() {
         .then((lastUnit: { temperature: number }) => {
           const convert: Dec.General.DataUnit = {
             ...lastUnit,
-            date: tools.dateID(),
+            date: dateID(),
           }
           setData(convert)
         })
