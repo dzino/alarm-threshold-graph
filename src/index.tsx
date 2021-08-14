@@ -13,13 +13,12 @@ import App from "./views"
  * # Redux
  * Chrome: Redux DevTools
  */
+const devTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__
+  ? [(window as any).__REDUX_DEVTOOLS_EXTENSION__()]
+  : []
 const store = createStore(
   rootReducer,
-  compose(
-    applyMiddleware(thunk),
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
-      (window as any).__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  compose(applyMiddleware(thunk), ...devTools)
 )
 
 ReactDOM.render(
