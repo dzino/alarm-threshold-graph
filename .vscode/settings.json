@@ -5,6 +5,9 @@
     "Reducer",
     "Reducers",
     "Temperature",
-    "centered"
+    "centered",
+    "emulator",
+    "production",
+    "saga"
   ]
 }

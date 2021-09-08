@@ -18,14 +18,20 @@ export declare namespace Redux {
 }
 
 export declare namespace Actions {
-  interface Data {
-    type: "DATA"
-    payload: General.DataUnit
-  }
-  interface LimitTemperature {
-    type: "LIMIT_TEMP"
-    payload: General.TempUnit
+  interface List {
+    data: {
+      type: "DATA"
+      payload: General.DataUnit
+    }
+    limitTemp: {
+      type: "LIMIT_TEMP"
+      payload: General.TempUnit
+    }
+    update: {
+      type: "UPDATE"
+    }
   }
 
-  type All = LimitTemperature | Data
+  type All = List[keyof List]
+  type Type = List[keyof List]["type"]
 }

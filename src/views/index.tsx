@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import dateFormat from "dateformat"
 import * as Dec from "../declaration"
 import GraphX from "../components/graph"
 import { SVG } from "../components/svg"
@@ -48,23 +47,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 }
 
-const { dateID, getRandomInt, __DEV__ } = {
-  dateID(): number {
-    return +dateFormat(new Date(), "yyyymmddHHMMssl")
-  },
-  getRandomInt(max: number, previousNumber: number): number {
-    const up: boolean = Boolean(Math.round(Math.random()))
-    const checkMax: boolean = previousNumber === max
-    const checkMin: boolean = previousNumber === 0
-    return up && !checkMax
-      ? ++previousNumber
-      : !up && !checkMin
-      ? --previousNumber
-      : previousNumber
-  },
-  __DEV__: process.env.NODE_ENV !== "production",
-}
-
 class Graph {
   private length = 0
   private full = false
@@ -92,17 +74,14 @@ export default function App() {
     useSelector((state: Dec.Redux.RootState) => state.limitTemp.value),
     (v: Dec.General.TempUnit) => dispatch({ type: "LIMIT_TEMP", payload: v }),
   ]
-  const [data, setData] = [
-    useSelector((state: Dec.Redux.RootState) => state.data.value),
-    (v: Dec.General.DataUnit) => dispatch({ type: "DATA", payload: v }),
-  ]
+  const data = useSelector((state: Dec.Redux.RootState) => state.data.value)
+  const update = () => dispatch({ type: "UPDATE" })
 
   /** ## Threshold retention timer */
   const timer = useRef<NodeJS.Timeout | null>(null)
   const [temperature, setTemperature] = useState<number>(0)
   const alarm: boolean = temperature < limitTemp
 
-  const [host, port]: Readonly<[string, number]> = ["192.168.43.100", 8080]
   const graphLength: Readonly<number> = 120
 
   const graphTemp = new Graph(
@@ -116,31 +95,6 @@ export default function App() {
     (): void => setLimitTemp(+(localStorage.getItem("limitTemp") || 0)),
     (): void => localStorage.setItem("limitTemp", JSON.stringify(limitTemp)),
   ]
-
-  function update(): void {
-    if (__DEV__) {
-      const convert: Dec.General.DataUnit = {
-        temperature: getRandomInt(50, data[data.length - 1]?.temperature || 20),
-        date: dateID(),
-      }
-      setData(convert)
-    } else {
-      /* Server request */
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      }
-      fetch(`http://${host}:${port}/`, requestOptions)
-        .then((response) => response.json())
-        .then((lastUnit: { temperature: number }) => {
-          const convert: Dec.General.DataUnit = {
-            ...lastUnit,
-            date: dateID(),
-          }
-          setData(convert)
-        })
-    }
-  }
 
   useEffect(() => {
     limitsGet()
