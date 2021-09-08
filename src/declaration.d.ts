@@ -14,7 +14,16 @@ export declare namespace Redux {
     limitTemp: {
       value: General.TempUnit
     }
+    settings: {
+      host: string
+      port: number
+      graphLength: number
+      clear: number
+      timeout: number
+    }
   }
+
+  type Reducers = { [key in keyof RootState]: any }
 }
 
 export declare namespace Actions {

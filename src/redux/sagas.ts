@@ -31,14 +31,17 @@ class Update implements Action {
   private tools = new Tools()
   private data: General.DataUnit[] | null = null
   private setData: ((v: General.DataUnit) => void) | null = null
-  // const [host, port]: Readonly<[string, number]> = ["192.168.43.100", 8080]
-  private host: string = "192.168.43.100"
-  private port: number = 8080
+  private host: string | null = null
+  private port: number | null = null
 
   run(params: {
+    host: string
+    port: number
     data: General.DataUnit[]
     setData: (v: General.DataUnit) => void
   }) {
+    this.port = params.port
+    this.host = params.host
     this.data = params.data
     this.setData = params.setData
     if (this.tools.__DEV__) return this.emulator()
@@ -59,7 +62,7 @@ class Update implements Action {
 
   /** Server request */
   private async *server() {
-    if (!this.setData) return
+    if (!this.setData || !this.host || !this.port) return
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,5 +95,8 @@ function* sagaWorker() {
       yield put({ type: "DATA", payload: v })
     },
   ]
-  yield fork(() => update.run({ data, setData })) // call/fork/spawn блокирующий/неБлокирующий
+  const { host, port } = yield select(
+    (state: Redux.RootState) => state.settings
+  )
+  yield fork(() => update.run({ host, port, data, setData })) // call/fork/spawn блокирующий/неБлокирующий
 }

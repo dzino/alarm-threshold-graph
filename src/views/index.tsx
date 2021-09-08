@@ -82,7 +82,8 @@ export default function App() {
   const [temperature, setTemperature] = useState<number>(0)
   const alarm: boolean = temperature < limitTemp
 
-  const graphLength: Readonly<number> = 120
+  const { graphLength, clear, timeout }: Dec.Redux.RootState["settings"] =
+    useSelector((state: Dec.Redux.RootState) => state.settings)
 
   const graphTemp = new Graph(
     graphLength,
@@ -103,14 +104,14 @@ export default function App() {
 
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(limitsSet, 3000)
+    timer.current = setTimeout(limitsSet, clear)
   }, [limitTemp]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const lastUnit = data[data.length - 1]
     if (lastUnit) {
       setTemperature(lastUnit.temperature)
-      setTimeout(update, 5000)
+      setTimeout(update, timeout)
     }
   }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
 
