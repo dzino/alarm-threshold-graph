@@ -39,12 +39,11 @@ export declare namespace Actions {
       payload: General.DataUnit
     }
     limitTemp: {
-      type: "LIMIT_TEMP"
+      type: "LIMIT_TEMP" // SET_LOCAL
       payload: General.TempUnit
     }
     update: { type: "UPDATE" }
     getLocal: { type: "GET_LOCAL" }
-    setLocal: { type: "SET_LOCAL" }
     clearLocal: { type: "CLEAR_LOCAL" }
   }
 

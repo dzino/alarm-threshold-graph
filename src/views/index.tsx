@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as Dec from "../declaration"
 import GraphX from "../components/graph"
@@ -75,41 +75,29 @@ export default function App() {
     (v: Dec.General.TempUnit) => dispatch({ type: "LIMIT_TEMP", payload: v }),
   ]
   const data = useSelector((state: Dec.Redux.RootState) => state.data.value)
-  const update = () => dispatch({ type: "UPDATE" })
 
-  /** ## Threshold retention timer */
-  const timer = useRef<NodeJS.Timeout | null>(null)
   const [temperature, setTemperature] = useState<number>(0)
   const alarm: boolean = temperature < limitTemp
 
-  const { graphLength, clear, timeout }: Dec.Redux.RootState["settings"] =
-    useSelector((state: Dec.Redux.RootState) => state.settings)
+  const { graphLength, timeout }: Dec.Redux.RootState["settings"] = useSelector(
+    (state: Dec.Redux.RootState) => state.settings
+  )
 
   const graphTemp = new Graph(
     graphLength,
     data.map((i) => i.temperature)
   )
 
-  const [limitsGet, limitsSet] = [
-    (): void => dispatch({ type: "GET_LOCAL" }),
-    (): void => dispatch({ type: "SET_LOCAL" }),
-  ]
-
   useEffect(() => {
-    limitsGet()
-    update()
+    dispatch({ type: "GET_LOCAL" })
+    dispatch({ type: "UPDATE" })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(limitsSet, clear)
-  }, [limitTemp]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const lastUnit = data[data.length - 1]
     if (lastUnit) {
       setTemperature(lastUnit.temperature)
-      setTimeout(update, timeout)
+      setTimeout(() => dispatch({ type: "UPDATE" }), timeout)
     }
   }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
 

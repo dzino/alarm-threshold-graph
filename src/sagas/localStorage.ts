@@ -23,7 +23,7 @@ export class GetStorage extends LocalStorage implements General.Action {
 }
 
 export class SetStorage extends LocalStorage implements General.Action {
-  pattern: Readonly<Actions.Type> = "SET_LOCAL"
+  pattern: Readonly<Actions.Type> = "LIMIT_TEMP"
   run = (params: { limitTemp: number }) => this.set(params.limitTemp)
 }
 

@@ -1,4 +1,4 @@
-import { put, select, fork, takeEvery } from "redux-saga/effects"
+import { put, select, fork, takeEvery, takeLatest } from "redux-saga/effects"
 import { General, Redux } from "../declaration"
 import { Update } from "./server"
 import { GetStorage, SetStorage, ClearStorage } from "./localStorage"
@@ -12,7 +12,7 @@ const update = new Update()
 export function* sagaWatcher() {
   yield takeEvery(update.pattern, updateWorker)
   yield takeEvery(getStorage.pattern, getWorker)
-  yield takeEvery(setStorage.pattern, setWorker)
+  yield takeLatest(setStorage.pattern, setWorker)
   yield takeEvery(clearStorage.pattern, clearWorker)
 }
 
@@ -35,7 +35,7 @@ function* getWorker() {
   const setLimitTemp: (v: General.TempUnit) => void = function* (v) {
     yield put({ type: "LIMIT_TEMP", payload: v })
   }
-  yield fork(() => getStorage.run({ setLimitTemp })) // call/fork/spawn блокирующий/неБлокирующий
+  yield fork(() => getStorage.run({ setLimitTemp }))
 }
 
 /** ### SAGA: Worker */
@@ -43,11 +43,14 @@ function* setWorker() {
   const limitTemp: number = yield select(
     (state: Redux.RootState) => state.limitTemp.value
   )
-
-  yield fork(() => setStorage.run({ limitTemp })) // call/fork/spawn блокирующий/неБлокирующий
+  const timer: number = yield select(
+    (state: Redux.RootState) => state.settings.clear
+  )
+  yield new Promise((resolve) => setTimeout(resolve, timer))
+  yield fork(() => setStorage.run({ limitTemp }))
 }
 
 /** ### SAGA: Worker */
 function* clearWorker() {
-  yield fork(() => clearStorage.run()) // call/fork/spawn блокирующий/неБлокирующий
+  yield fork(() => clearStorage.run())
 }
