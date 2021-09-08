@@ -1,5 +1,4 @@
-import { put, select, fork, takeEvery } from "redux-saga/effects"
-import { General, Redux, Actions } from "../declaration"
+import { General, Actions } from "../declaration"
 import dateFormat from "dateformat"
 
 class Tools {
@@ -21,12 +20,7 @@ class Tools {
   }
 }
 
-declare class Action {
-  pattern: Readonly<Actions.Type>
-  run(params: Object): void
-}
-
-class Update implements Action {
+export class Update implements General.Action {
   pattern: Readonly<Actions.Type> = "UPDATE"
   private tools = new Tools()
   private data: General.DataUnit[] | null = null
@@ -78,25 +72,4 @@ class Update implements Action {
     }
     yield this.setData(convert)
   }
-}
-
-const update = new Update()
-
-/** ### SAGA: Watcher */
-export function* sagaWatcher() {
-  yield takeEvery(update.pattern, sagaWorker)
-}
-
-/** ### SAGA: Worker */
-function* sagaWorker() {
-  const [data, setData]: [General.DataUnit[], (v: General.DataUnit) => void] = [
-    yield select((state: Redux.RootState) => state.data.value),
-    function* (v) {
-      yield put({ type: "DATA", payload: v })
-    },
-  ]
-  const { host, port } = yield select(
-    (state: Redux.RootState) => state.settings
-  )
-  yield fork(() => update.run({ host, port, data, setData })) // call/fork/spawn блокирующий/неБлокирующий
 }

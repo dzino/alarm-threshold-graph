@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import thunk from "redux-thunk"
 import createSagaMiddleware from "@redux-saga/core"
 import { rootReducer } from "./redux/rootReducer"
-import { sagaWatcher } from "./redux/sagas"
+import { sagaWatcher } from "./sagas"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./index.css"
 

@@ -8,6 +8,7 @@
     "centered",
     "emulator",
     "production",
-    "saga"
+    "saga",
+    "sagas"
   ]
 }

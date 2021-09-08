@@ -90,11 +90,9 @@ export default function App() {
     data.map((i) => i.temperature)
   )
 
-  /* Reset saved limit */
-  // localStorage.setItem("limitTemp", JSON.stringify(0));
   const [limitsGet, limitsSet] = [
-    (): void => setLimitTemp(+(localStorage.getItem("limitTemp") || 0)),
-    (): void => localStorage.setItem("limitTemp", JSON.stringify(limitTemp)),
+    (): void => dispatch({ type: "GET_LOCAL" }),
+    (): void => dispatch({ type: "SET_LOCAL" }),
   ]
 
   useEffect(() => {

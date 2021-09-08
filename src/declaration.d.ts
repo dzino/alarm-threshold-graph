@@ -3,7 +3,13 @@ export declare namespace General {
     temperature: number
     date: number
   }
+
   type TempUnit = number
+
+  declare class Action {
+    pattern: Readonly<Actions.Type>
+    run(params: Object): void
+  }
 }
 
 export declare namespace Redux {
@@ -36,9 +42,10 @@ export declare namespace Actions {
       type: "LIMIT_TEMP"
       payload: General.TempUnit
     }
-    update: {
-      type: "UPDATE"
-    }
+    update: { type: "UPDATE" }
+    getLocal: { type: "GET_LOCAL" }
+    setLocal: { type: "SET_LOCAL" }
+    clearLocal: { type: "CLEAR_LOCAL" }
   }
 
   type All = List[keyof List]
