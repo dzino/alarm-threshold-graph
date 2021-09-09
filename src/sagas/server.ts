@@ -33,12 +33,13 @@ export class Update implements General.Action {
     port: number
     data: General.DataUnit[]
     setData: (v: General.DataUnit) => void
+    __PRODUCTION__?: boolean
   }) {
     this.port = params.port
     this.host = params.host
     this.data = params.data
     this.setData = params.setData
-    if (this.tools.__DEV__) return this.emulator()
+    if (!params.__PRODUCTION__ && this.tools.__DEV__) return this.emulator()
     this.server()
   }
 
