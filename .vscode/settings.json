@@ -1,15 +1,22 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
+    "Chrome",
     "Props",
     "Prototypes",
     "Reducer",
     "Reducers",
     "Temperature",
     "centered",
+    "eject",
     "emulator",
+    "firefox",
+    "jest",
+    "mini",
     "production",
+    "safari",
     "saga",
-    "sagas"
+    "sagas",
+    "threshold"
   ]
 }
