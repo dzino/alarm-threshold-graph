@@ -1,4 +1,4 @@
-# Alarm threshold graph
+# TRAINING CASE: Alarm threshold graph
 
 ![](./screenshot.gif)
 
